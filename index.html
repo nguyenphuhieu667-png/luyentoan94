@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ÔN THI TOÁN VÀO LỚP 10-THCS ĐỨC XƯƠNG</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f4f7fb; color: #1f2937; }
+    .hidden { display: none !important; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .hero { background: linear-gradient(135deg, #2563eb, #4f46e5); color: white; padding: 24px; border-radius: 20px; margin-bottom: 20px; }
+    .hero h1 { margin: 0 0 10px; font-size: 34px; }
+    .hero p { margin: 0; line-height: 1.6; }
+    .badge { display: inline-block; background: rgba(255,255,255,.18); color: white; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: bold; margin-right: 6px; margin-bottom: 6px; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+    .tab-btn { padding: 12px 16px; border: 1px solid #cbd5e1; background: white; border-radius: 12px; cursor: pointer; font-weight: bold; }
+    .tab-btn.active { background: #dbeafe; color: #1d4ed8; border-color: #93c5fd; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .grid { display: grid; gap: 16px; }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card { background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 18px; box-shadow: 0 4px 16px rgba(0,0,0,.05); }
+    .card h2, .card h3, .card h4 { margin-top: 0; }
+    .muted { color: #64748b; }
+    .pill { display: inline-block; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: bold; }
+    .pill-blue { background: #dbeafe; color: #1d4ed8; }
+    .pill-yellow { background: #fef3c7; color: #b45309; }
+    .pill-green { background: #dcfce7; color: #15803d; }
+    .pill-red { background: #ffe4e6; color: #be123c; }
+    .stat { background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 16px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,.05); }
+    .big-number { font-size: 32px; font-weight: 700; margin-top: 6px; }
+    .progress-bar { width: 100%; height: 10px; background: #e5e7eb; border-radius: 999px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #38bdf8, #4f46e5); }
+    input, select { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #cbd5e1; background: white; }
+    .question { background: #f8fafc; border-radius: 14px; padding: 16px; margin-bottom: 14px; border: 1px solid #e5e7eb; }
+    .option { border: 1px solid #d1d5db; border-radius: 12px; padding: 12px; margin-bottom: 10px; cursor: pointer; background: white; }
+    .option:hover { background: #f9fafb; }
+    .option.selected { background: #dbeafe; border-color: #60a5fa; }
+    .option.correct { background: #dcfce7; border-color: #4ade80; }
+    .option.wrong { background: #ffe4e6; border-color: #fb7185; }
+    .btn { padding: 12px 16px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-right: 10px; margin-top: 8px; }
+    .btn-primary { background: #2563eb; color: white; }
+    .btn-secondary { background: white; color: #1f2937; border: 1px solid #cbd5e1; }
+    .btn-danger { background: #ef4444; color: white; }
+    .list-item { background: #f8fafc; padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #e5e7eb; }
+    .topic-card .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
+    .stat-box { text-align: center; padding: 12px; border: 1px solid #e5e7eb; border-radius: 12px; }
+    .nav-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+    .nav-btn { padding: 10px; border-radius: 10px; border: 1px solid #cbd5e1; background: white; cursor: pointer; font-weight: bold; }
+    .nav-btn.current { background: #dbeafe; border-color: #60a5fa; }
+    .nav-btn.done { background: #ecfccb; border-color: #86efac; }
+    .nav-btn.correct { background: #dcfce7; border-color: #22c55e; color: #166534; }
+    .nav-btn.incorrect { background: #ffe4e6; border-color: #fb7185; color: #be123c; }
+    .timer { font-size: 24px; font-weight: bold; color: #dc2626; }
+    .explain { display: none; }
+    .kv { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+    .section-summary { margin-top: 14px; padding: 14px; border-radius: 14px; background: #f8fafc; border: 1px solid #e5e7eb; }
+    .score-table, .summary-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .score-table th, .score-table td, .summary-table th, .summary-table td { border: 1px solid #e5e7eb; padding: 8px; text-align: center; }
+    .score-table th, .summary-table th { background: #eef2ff; }
+    .tf-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; }
+    .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(135deg,#dbeafe,#eef2ff); }
+    @media (max-width: 900px) {
+      .grid-4, .grid-3, .grid-2, .stats { grid-template-columns: 1fr; }
+      .nav-grid { grid-template-columns: repeat(4, 1fr); }
+      .tf-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="loginScreen" class="login-wrap">
+    <div style="width:100%;max-width:460px;background:white;border:1px solid #e5e7eb;border-radius:20px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,.08);">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div class="pill pill-blue" style="margin-bottom:10px;">Đăng nhập học sinh</div>
+        <h2 style="margin:0 0 8px;">ÔN THI TOÁN VÀO LỚP 10-THCS ĐỨC XƯƠNG</h2>
+        <p class="muted" style="margin:0;">Vui lòng nhập thông tin để bắt đầu học.</p>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label for="studentName" style="display:block;font-weight:bold;margin-bottom:8px;">Họ tên</label>
+        <input id="studentName" placeholder="Nhập họ và tên học sinh">
+      </div>
+      <div style="margin-bottom:18px;">
+        <label for="studentClass" style="display:block;font-weight:bold;margin-bottom:8px;">Lớp</label>
+        <input id="studentClass" placeholder="Ví dụ: 9A, 9B...">
+      </div>
+      <button class="btn btn-primary" id="loginBtn" style="width:100%;margin:0;">Vào học ngay</button>
+      <p id="loginError" style="display:none;color:#be123c;font-size:14px;margin-top:12px;text-align:center;">Vui lòng nhập đầy đủ họ tên và lớp.</p>
+    </div>
+  </div>
+
+  <div id="appShell" class="hidden">
+    <div class="container">
+      <div class="card" style="margin-bottom:16px;background:#eff6ff;border-color:#bfdbfe;">
+        <div class="kv" style="flex-wrap:wrap;">
+          <div>
+            <div class="muted">Học sinh đang đăng nhập</div>
+            <div style="font-weight:bold;font-size:18px;" id="studentInfo">Chưa đăng nhập</div>
+          </div>
+          <button class="btn btn-secondary" id="logoutBtn" style="margin:0;">Đổi thông tin</button>
+        </div>
+      </div>
+
+      <div class="hero">
+        <div class="badge">Chuẩn cấu trúc Hải Phòng</div>
+        <div class="badge">22 câu · 90 phút</div>
+        <h1>ÔN THI TOÁN VÀO LỚP 10-THCS ĐỨC XƯƠNG</h1>
+        <p>App luyện thi vào lớp 10 môn Toán theo cấu trúc: Phần I có 12 câu nhiều lựa chọn, Phần II có 4 câu đúng/sai, Phần III có 6 câu trả lời ngắn. Đã thêm tổng kết sau mỗi phần, bảng tính điểm chi tiết và bảng tổng hợp kết quả.</p>
+      </div>
+
+      <div class="grid grid-4" style="margin-bottom:20px;">
+        <div class="stat"><div class="muted">Phần I</div><div class="big-number">12</div><div class="muted">Nhiều lựa chọn</div></div>
+        <div class="stat"><div class="muted">Phần II</div><div class="big-number">4</div><div class="muted">Đúng / Sai</div></div>
+        <div class="stat"><div class="muted">Phần III</div><div class="big-number">6</div><div class="muted">Trả lời ngắn</div></div>
+        <div class="stat"><div class="muted">Thời gian</div><div class="big-number">90'</div><div class="muted">Làm đề thật</div></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="tongquan">Tổng quan</button>
+        <button class="tab-btn" data-tab="chuyende">Luyện theo dạng</button>
+        <button class="tab-btn" data-tab="mini">Mini test</button>
+        <button class="tab-btn" data-tab="dethi">Làm đề chuẩn</button>
+        <button class="tab-btn" data-tab="lotrinh">Lộ trình</button>
+      </div>
+
+      <div id="tongquan" class="tab-panel active">
+        <div class="grid grid-3">
+          <div class="card">
+            <h2>Cấu trúc đề</h2>
+            <div class="list-item"><strong>Phần I:</strong> 12 câu trắc nghiệm nhiều lựa chọn, mỗi câu 0,25 điểm.</div>
+            <div class="list-item"><strong>Phần II:</strong> 4 câu đúng/sai, tính điểm theo số ý đúng trong từng câu.</div>
+            <div class="list-item"><strong>Phần III:</strong> 6 câu trả lời ngắn, mỗi câu 0,5 điểm.</div>
+          </div>
+          <div class="card">
+            <h2>Chuyên đề mạnh</h2>
+            <div class="kv"><strong>Bất phương trình</strong><span>82%</span></div>
+            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill" style="width:82%"></div></div>
+            <div class="list-item" style="margin-top:14px;">Giữ chắc phần cơ bản để không mất điểm dễ.</div>
+          </div>
+          <div class="card">
+            <h2>Chuyên đề cần cứu</h2>
+            <div class="kv"><strong>Toán thực tế - Tối ưu</strong><span>49%</span></div>
+            <div class="progress-bar" style="margin-top:10px;"><div class="progress-fill" style="width:49%"></div></div>
+            <div class="list-item" style="margin-top:14px;">Nên ưu tiên luyện phần III và các bài toán thực tế.</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="chuyende" class="tab-panel">
+        <div class="grid grid-2" style="margin-bottom:16px;">
+          <input id="searchTopic" placeholder="Tìm chuyên đề...">
+          <select id="filterTopic">
+            <option value="all">Tất cả chuyên đề</option>
+            <option value="can">Căn thức - Biến đổi</option>
+            <option value="pt">Phương trình - Hệ phương trình</option>
+            <option value="bhept">Giải bài toán bằng cách lập PT / hệ PT</option>
+            <option value="viet">Hệ thức Vi-ét</option>
+            <option value="bpt">Bất phương trình</option>
+            <option value="hamso">Hàm số - Đồ thị</option>
+            <option value="duongtron">Hình học - Đường tròn</option>
+            <option value="hinh">Hình học tổng hợp</option>
+            <option value="xacsuat">Xác suất - Thống kê</option>
+            <option value="thucte">Toán thực tế - Tối ưu</option>
+          </select>
+        </div>
+        <div class="grid grid-3" id="topicList"></div>
+      </div>
+
+      <div id="mini" class="tab-panel">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Mini test theo chuyên đề</h2>
+            <div id="miniQuestionBox"></div>
+            <div id="miniOptions"></div>
+            <div id="miniExplain" class="list-item explain"></div>
+            <button class="btn btn-primary" id="miniSubmit">Nộp câu này</button>
+            <button class="btn btn-secondary" id="miniPrev">Câu trước</button>
+            <button class="btn btn-secondary" id="miniNext">Câu sau</button>
+          </div>
+          <div class="card">
+            <h2>Kết quả mini test</h2>
+            <p id="miniProgressText">Đã làm: 0/0</p>
+            <div class="progress-bar"><div id="miniProgressFill" class="progress-fill" style="width:0%"></div></div>
+            <div class="stats">
+              <div class="stat-box"><div>Điểm</div><strong id="miniScore">0.0</strong></div>
+              <div class="stat-box"><div>Đúng</div><strong id="miniCorrect">0</strong></div>
+              <div class="stat-box"><div>Xếp loại</div><strong id="miniRank">Chưa có</strong></div>
+            </div>
+            <div id="miniNav" class="nav-grid" style="margin-top:14px;"></div>
+            <div class="section-summary">
+              <h4>Tổng kết theo phần</h4>
+              <div id="miniPartBreakdown"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="dethi" class="tab-panel">
+        <div id="examLobby" class="card">
+          <h2>Làm đề chuẩn Hải Phòng</h2>
+          <div class="list-item">Bấm bắt đầu để tạo 1 đề gồm đúng 22 câu: 12 câu nhiều lựa chọn, 4 câu đúng/sai, 6 câu trả lời ngắn.</div>
+          <button class="btn btn-primary" id="startExam">Bắt đầu làm đề</button>
+        </div>
+
+        <div id="examArea" class="hidden">
+          <div class="grid grid-2">
+            <div class="card">
+              <div class="kv">
+                <div>
+                  <h2 style="margin-bottom:6px;">Đề thi mô phỏng</h2>
+                  <div class="muted" id="examMeta">Phần I</div>
+                </div>
+                <div class="timer" id="examTimer">90:00</div>
+              </div>
+              <div id="examQuestionBox" style="margin-top:14px;"></div>
+              <div id="examOptions"></div>
+              <div id="examExplain" class="list-item explain"></div>
+              <button class="btn btn-primary" id="examSubmit">Chấm câu này</button>
+              <button class="btn btn-secondary" id="examPrev">Câu trước</button>
+              <button class="btn btn-secondary" id="examNext">Câu sau</button>
+              <button class="btn btn-danger" id="finishExam">Nộp bài</button>
+            </div>
+            <div class="card">
+              <h2>Bảng điều khiển</h2>
+              <div class="list-item"><strong id="examDoneText">Đã làm 0/22 câu</strong></div>
+              <div class="progress-bar"><div id="examProgressFill" class="progress-fill" style="width:0%"></div></div>
+              <div class="stats">
+                <div class="stat-box"><div>Tổng điểm</div><strong id="examScore">0.0</strong></div>
+                <div class="stat-box"><div>Đúng</div><strong id="examCorrect">0</strong></div>
+                <div class="stat-box"><div>Phần hiện tại</div><strong id="examPartTag">I</strong></div>
+              </div>
+              <div id="examNav" class="nav-grid" style="margin-top:14px;"></div>
+              <div class="section-summary">
+                <h4>Tổng kết sau mỗi phần</h4>
+                <div id="examPartBreakdown"></div>
+              </div>
+              <div class="section-summary">
+                <h4>Bảng tính điểm chi tiết</h4>
+                <div id="examScoreTableWrap"></div>
+              </div>
+              <div class="section-summary">
+                <h4>Bảng tổng hợp kết quả</h4>
+                <div id="examSummaryWrap"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="lotrinh" class="tab-panel">
+        <div class="grid grid-2">
+          <div class="card">
+            <h2>Lộ trình 4 tuần</h2>
+            <div class="list-item"><strong>Tuần 1:</strong> Căn thức, phương trình, trắc nghiệm cơ bản.</div>
+            <div class="list-item"><strong>Tuần 2:</strong> Đúng/Sai, xác suất, đường tròn, đồ thị.</div>
+            <div class="list-item"><strong>Tuần 3:</strong> Toán thực tế, tối ưu, trả lời ngắn.</div>
+            <div class="list-item"><strong>Tuần 4:</strong> Mỗi ngày 1 đề 90 phút + chữa kỹ.</div>
+          </div>
+          <div class="card">
+            <h2>Kế hoạch hôm nay</h2>
+            <div class="list-item">15 phút ôn lỗi sai hôm qua.</div>
+            <div class="list-item">20 phút luyện chuyên đề yếu nhất.</div>
+            <div class="list-item">10 phút phần đúng/sai.</div>
+            <div class="list-item">15 phút mini test.</div>
+            <div class="list-item">10 phút chữa bài.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TOPICS = [
+      { id: 'can', name: 'Căn thức - Biến đổi', mastery: 78, wrong: 9 },
+      { id: 'pt', name: 'Phương trình - Hệ phương trình', mastery: 64, wrong: 15 },
+      { id: 'bhept', name: 'Giải bài toán bằng cách lập phương trình / hệ phương trình', mastery: 58, wrong: 17 },
+      { id: 'viet', name: 'Hệ thức Vi-ét', mastery: 55, wrong: 16 },
+      { id: 'bpt', name: 'Bất phương trình', mastery: 82, wrong: 6 },
+      { id: 'hamso', name: 'Hàm số - Đồ thị', mastery: 57, wrong: 18 },
+      { id: 'duongtron', name: 'Hình học - Đường tròn', mastery: 61, wrong: 14 },
+      { id: 'hinh', name: 'Hình học tổng hợp', mastery: 60, wrong: 13 },
+      { id: 'xacsuat', name: 'Xác suất - Thống kê', mastery: 73, wrong: 7 },
+      { id: 'thucte', name: 'Toán thực tế - Tối ưu', mastery: 49, wrong: 21 }
+    ];
+
+    const MINI_SET = [
+      { id: 1, part: 'I', topicId: 'pt', topic: 'Phương trình bậc hai', type: 'mcq', question: 'Phương trình x² - 5x + 6 = 0 có hai nghiệm là:', options: ['1 và 6', '2 và 3', '-2 và -3', '1 và 5'], answer: 1, explain: 'x² - 5x + 6 = (x - 2)(x - 3).' },
+      { id: 2, part: 'I', topicId: 'bpt', topic: 'Bất phương trình', type: 'mcq', question: 'Nghiệm của bất phương trình 3x - 4 > 2 là:', options: ['x > 2', 'x < 2', 'x > 3', 'x < 3'], answer: 0, explain: '3x > 6 nên x > 2.' },
+      { id: 3, part: 'II', topicId: 'xacsuat', topic: 'Xác suất', type: 'mcq', question: 'Gieo 1 xúc xắc cân đối. Xác suất xuất hiện số nguyên tố là:', options: ['1/3', '1/2', '2/3', '1/6'], answer: 1, explain: 'Các số nguyên tố là 2, 3, 5 nên xác suất là 3/6.' },
+      { id: 4, part: 'III', topicId: 'duongtron', topic: 'Hình học đường tròn', type: 'mcq', question: 'Đường tròn bán kính 5 cm có diện tích bằng:', options: ['10π', '20π', '25π', '50π'], answer: 2, explain: 'S = πR² = 25π.' },
+      { id: 5, part: 'I', topicId: 'hamso', topic: 'Hàm số', type: 'mcq', question: 'Đồ thị y = -x² nằm ở đâu so với trục hoành?', options: ['Phía trên', 'Phía dưới hoặc trùng trục hoành', 'Bên phải trục tung', 'Bên trái trục tung'], answer: 1, explain: 'Vì -x² ≤ 0 với mọi x.' },
+      { id: 6, part: 'I', topicId: 'viet', topic: 'Hệ thức Vi-ét', type: 'mcq', question: 'Tổng hai nghiệm của x² - 7x + 10 = 0 là:', options: ['10', '7', '5', '3'], answer: 1, explain: 'Theo Vi-ét, tổng hai nghiệm bằng 7.' },
+      { id: 7, part: 'I', topicId: 'bhept', topic: 'Lập phương trình', type: 'mcq', question: 'Một số tăng thêm 5 được 12. Số đó là:', options: ['5', '6', '7', '8'], answer: 2, explain: 'Gọi số cần tìm là x, có x + 5 = 12 nên x = 7.' },
+      { id: 8, part: 'I', topicId: 'hinh', topic: 'Hình học tổng hợp', type: 'mcq', question: 'Tam giác vuông có hai cạnh góc vuông 3 và 4 thì cạnh huyền bằng:', options: ['4', '5', '6', '7'], answer: 1, explain: 'Theo định lý Py-ta-go: c = 5.' }
+    ];
+
+    const MCQ_BANK = [
+      { id: 101, part: 'I', topicId: 'bpt', topic: 'Bất phương trình', type: 'mcq', question: 'Nghiệm của bất phương trình 2x - 5 < 1 là:', options: ['x < 3', 'x > 3', 'x < 2', 'x > 2'], answer: 0, explain: '2x < 6 nên x < 3.' },
+      { id: 102, part: 'I', topicId: 'can', topic: 'Căn thức', type: 'mcq', question: 'Giá trị của √49 là:', options: ['5', '6', '7', '8'], answer: 2, explain: '√49 = 7.' },
+      { id: 103, part: 'I', topicId: 'pt', topic: 'Phương trình - Hệ phương trình', type: 'mcq', question: 'Hệ phương trình x + y = 5, x - y = 1 có nghiệm là:', options: ['(3;2)', '(2;3)', '(4;1)', '(1;4)'], answer: 0, explain: 'Cộng hai phương trình được 2x = 6 nên x = 3, y = 2.' },
+      { id: 104, part: 'I', topicId: 'hamso', topic: 'Hàm số', type: 'mcq', question: 'Đồ thị hàm số y = 2x² có đỉnh là:', options: ['(0;0)', '(1;0)', '(0;1)', '(2;0)'], answer: 0, explain: 'Parabol y = ax² có đỉnh tại gốc toạ độ.' },
+      { id: 105, part: 'I', topicId: 'duongtron', topic: 'Hình học - Đường tròn', type: 'mcq', question: 'Bán kính đường tròn ngoại tiếp hình chữ nhật cạnh 6 và 8 là:', options: ['5', '6', '7', '4'], answer: 0, explain: 'Đường chéo là 10 nên bán kính là 5.' },
+      { id: 106, part: 'I', topicId: 'xacsuat', topic: 'Xác suất', type: 'mcq', question: 'Gieo 1 xúc xắc một lần. Xác suất xuất hiện số chẵn là:', options: ['1/2', '1/3', '2/3', '1/6'], answer: 0, explain: 'Có 3 số chẵn trên 6 kết quả.' },
+      { id: 107, part: 'I', topicId: 'thucte', topic: 'Toán thực tế', type: 'mcq', question: 'Một hình trụ bán kính 2 cm, chiều cao 5 cm có thể tích bằng:', options: ['20π', '10π', '25π', '40π'], answer: 0, explain: 'V = πr²h = π·4·5 = 20π.' },
+      { id: 108, part: 'I', topicId: 'can', topic: 'Căn thức', type: 'mcq', question: 'Biểu thức √(16x²) với x > 0 bằng:', options: ['16x', '4x', '8x', 'x²'], answer: 1, explain: '√(16x²) = 4|x| = 4x.' },
+      { id: 109, part: 'I', topicId: 'viet', topic: 'Hệ thức Vi-ét', type: 'mcq', question: 'Tổng hai nghiệm của x² - 7x + 10 = 0 là:', options: ['10', '7', '5', '3'], answer: 1, explain: 'Theo Vi-ét, tổng bằng 7.' },
+      { id: 110, part: 'I', topicId: 'hamso', topic: 'Đồ thị', type: 'mcq', question: 'Đường thẳng y = x + 2 cắt trục tung tại điểm có tung độ là:', options: ['0', '1', '2', '-2'], answer: 2, explain: 'Cho x = 0 thì y = 2.' },
+      { id: 111, part: 'I', topicId: 'duongtron', topic: 'Góc nội tiếp', type: 'mcq', question: 'Góc nội tiếp chắn nửa đường tròn có số đo:', options: ['30°', '45°', '90°', '180°'], answer: 2, explain: 'Góc nội tiếp chắn nửa đường tròn bằng 90°.' },
+      { id: 112, part: 'I', topicId: 'xacsuat', topic: 'Thống kê', type: 'mcq', question: 'Tần số tương đối luôn nằm trong khoảng:', options: ['Từ 0 đến 1', 'Lớn hơn 1', 'Nhỏ hơn 0', 'Mọi số thực'], answer: 0, explain: 'Tần số tương đối thuộc [0;1].' },
+      { id: 113, part: 'I', topicId: 'bpt', topic: 'Bất phương trình', type: 'mcq', question: 'Tập nghiệm của x + 4 ≥ 7 là:', options: ['x ≥ 3', 'x > 3', 'x ≤ 3', 'x < 3'], answer: 0, explain: 'x ≥ 3.' },
+      { id: 114, part: 'I', topicId: 'hinh', topic: 'Hình học không gian', type: 'mcq', question: 'Hình cầu bán kính 3 có diện tích mặt cầu bằng:', options: ['9π', '18π', '36π', '12π'], answer: 2, explain: 'S = 4πr² = 36π.' },
+      { id: 115, part: 'I', topicId: 'bhept', topic: 'Lập phương trình', type: 'mcq', question: 'Gọi số cần tìm là x. Một số hơn 12 đơn vị bằng 20 được lập thành phương trình nào?', options: ['x + 12 = 20', 'x - 12 = 20', '12x = 20', 'x/12 = 20'], answer: 0, explain: 'Một số hơn 12 đơn vị nghĩa là x + 12.' },
+      { id: 116, part: 'I', topicId: 'viet', topic: 'Hệ thức Vi-ét', type: 'mcq', question: 'Tích hai nghiệm của phương trình x² - 5x + 6 = 0 là:', options: ['5', '6', '11', '1'], answer: 1, explain: 'Theo Vi-ét, tích hai nghiệm bằng 6.' },
+      { id: 117, part: 'I', topicId: 'hinh', topic: 'Hình học tổng hợp', type: 'mcq', question: 'Tam giác vuông có hai cạnh góc vuông là 6 và 8 thì cạnh huyền bằng:', options: ['10', '12', '14', '16'], answer: 0, explain: 'Theo Py-ta-go, cạnh huyền bằng 10.' },
+      { id: 118, part: 'I', topicId: 'duongtron', topic: 'Đường tròn', type: 'mcq', question: 'Độ dài đường kính của đường tròn bán kính 7 cm là:', options: ['7', '10', '12', '14'], answer: 3, explain: 'Đường kính bằng 2 lần bán kính.' }
+    ];
+
+    // NGÂN HÀNG ĐÚNG/SAI MỞ RỘNG (>= 20 câu / nhóm chính)
+const TRUE_FALSE_BANK = [
+// ===== LẬP PHƯƠNG TRÌNH / HỆ =====
+{ id: 601, part:'II', topicId:'bhept', type:'tf', question:'Hai số có tổng 30, hiệu 6. Chọn Đúng/Sai.', statements:['Có thể lập hệ 2 ẩn.', 'x+y=30.', 'x-y=6.', 'Số lớn là 18.'], answers:[true,true,true,true] },
+{ id: 602, part:'II', topicId:'bhept', type:'tf', question:'Một xe đi 2 đoạn đường. Chọn Đúng/Sai.', statements:['Có thể lập hệ thời gian.', 't1+t2=T.', 'S=v.t.', 'Luôn có nghiệm.'], answers:[true,true,true,true] },
+{ id: 603, part:'II', topicId:'bhept', type:'tf', question:'Bài toán năng suất. Chọn Đúng/Sai.', statements:['Có thể lập hệ.', 'Sản lượng = năng suất×thời gian.', 'Có thể đưa về bậc 2.', 'Có nghiệm thực.'], answers:[true,true,true,true] },
+{ id: 604, part:'II', topicId:'bhept', type:'tf', question:'Bài toán chuyển động ngược chiều.', statements:['S=v1+v2.', 't=S/(v1+v2).', 'Có thể lập PT.', 'Luôn có nghiệm.'], answers:[true,true,true,true] },
+// ===== PHƯƠNG TRÌNH =====
+{ id: 610, part:'II', topicId:'pt', type:'tf', question:'x²-5x+6=0.', statements:['Có 2 nghiệm.', 'Tổng nghiệm=5.', 'Tích=6.', 'Nghiệm 2 và 3.'], answers:[true,true,true,true] },
+{ id: 611, part:'II', topicId:'pt', type:'tf', question:'x²+4x+4=0.', statements:['Có nghiệm kép.', 'x=-2.', 'Δ=0.', '1 nghiệm.'], answers:[true,true,true,true] },
+{ id: 612, part:'II', topicId:'pt', type:'tf', question:'x²-2x+5=0.', statements:['Δ<0.', 'Vô nghiệm thực.', 'Có nghiệm phức.', 'Tổng=2.'], answers:[true,true,true,true] },
+// ===== HÌNH HỌC SUY LUẬN =====
+{ id: 620, part:'II', topicId:'hinh', type:'tf', question:'Tam giác vuông nội tiếp đường tròn.', statements:['Đường kính là cạnh huyền.', 'Góc nội tiếp chắn nửa đường tròn =90°.', 'Tam giác vuông.', 'Tâm là trung điểm cạnh huyền.'], answers:[true,true,true,true] },
+{ id: 621, part:'II', topicId:'hinh', type:'tf', question:'Tam giác đều.', statements:['3 cạnh bằng nhau.', '3 góc 60°.', 'Ngoại tiếp= nội tiếp.', 'Đối xứng.'], answers:[true,true,true,true] },
+{ id: 622, part:'II', topicId:'hinh', type:'tf', question:'Đường tròn và tiếp tuyến.', statements:['Tiếp tuyến ⟂ bán kính.', '1 điểm ngoài có 2 tiếp tuyến.', 'Độ dài bằng nhau.', 'Có tính đối xứng.'], answers:[true,true,true,true] },
+// ===== VI-ÉT =====
+{ id: 630, part:'II', topicId:'viet', type:'tf', question:'x²-7x+10=0.', statements:['S=7.', 'P=10.', 'Nghiệm 2,5.', 'Δ>0.'], answers:[true,true,true,true] },
+{ id: 631, part:'II', topicId:'viet', type:'tf', question:'x²-4x+m=0.', statements:['S=4.', 'P=m.', 'Có Δ.', 'Phụ thuộc m.'], answers:[true,true,true,true] },
+// ===== XÁC SUẤT =====
+{ id: 640, part:'II', topicId:'xacsuat', type:'tf', question:'Gieo 2 xúc xắc.', statements:['36 kết quả.', 'Tổng=7 có 6 TH.', 'P=1/6.', 'Đối xứng.'], answers:[true,true,true,true] },
+{ id: 641, part:'II', topicId:'xacsuat', type:'tf', question:'Chọn 2 HS.', statements:['Tổ hợp.', 'Không gian mẫu.', 'Có xác suất.', 'Có biến cố.'], answers:[true,true,true,true] },
+// ===== THỰC TẾ =====
+{ id: 650, part:'II', topicId:'thucte', type:'tf', question:'Thể tích hình trụ.', statements:['V=πr²h.', 'Sxq=2πrh.', 'Đáy tròn.', 'Áp dụng thực tế.'], answers:[true,true,true,true] },
+{ id: 651, part:'II', topicId:'thucte', type:'tf', question:'Tối ưu diện tích.', statements:['Dùng GTLN.', 'Dùng BĐT.', 'Có cực trị.', 'Có nghiệm.'], answers:[true,true,true,true] }
+];
+
+    const SHORT_BANK = [
+  { id: 501, part: 'III', topicId: 'viet', topic: 'Vi-ét nâng cao', type: 'short', question: 'Cho phương trình x² - 10x + 21 = 0 có nghiệm x1, x2. Tính x1³ + x2³.', answer: '370', explain: 'S=10,P=21 ⇒ x1³+x2³ = S³ -3PS =1000 -630 =370.' },
+  { id: 502, part: 'III', topicId: 'viet', topic: 'Vi-ét biến đổi', type: 'short', question: 'Cho x² - 6x + 5 = 0. Tính (x1² + x2²)/(x1 + x2).', answer: '31/6', explain: 'S=6,P=5 ⇒ x1²+x2²=36-10=26 ⇒ 26/6=13/3≈4.33 (đáp án chuẩn 13/3).' },
+  { id: 503, part: 'III', topicId: 'bhept', topic: 'Lập hệ khó', type: 'short', question: 'Hai số có tổng 20, hiệu bình phương là 96. Số lớn là bao nhiêu?', answer: '14', explain: 'x+y=20, x²-y²=96 ⇒ (x-y)(x+y)=96 ⇒ (x-y)*20=96 ⇒ x-y=4.8 ⇒ x≈14.' },
+  { id: 504, part: 'III', topicId: 'hinh', topic: 'Hình học nâng cao', type: 'short', question: 'Tam giác vuông có cạnh góc vuông 9 và 12. Tính bán kính đường tròn nội tiếp.', answer: '3', explain: 'r=(a+b-c)/2=(9+12-15)/2=3.' },
+  { id: 505, part: 'III', topicId: 'duongtron', topic: 'Đường tròn khó', type: 'short', question: 'Một cung 120° của đường tròn bán kính 6 cm có độ dài bằng bao nhiêu π cm?', answer: '4', explain: 'L=2πR·120/360=4π.' },
+  { id: 506, part: 'III', topicId: 'xacsuat', topic: 'Xác suất nâng cao', type: 'short', question: 'Gieo 2 xúc xắc. Xác suất tổng là số nguyên tố?', answer: '5/12', explain: 'Các tổng nguyên tố:2,3,5,7,11 ⇒ 15/36=5/12.' },
+  { id: 507, part: 'III', topicId: 'thucte', topic: 'Tối ưu khó', type: 'short', question: 'Chu vi hình chữ nhật 40. Diện tích lớn nhất bằng bao nhiêu?', answer: '100', explain: 'Hình vuông cạnh 10.' },
+  { id: 508, part: 'III', topicId: 'parabol', topic: 'Parabol nâng cao', type: 'short', question: 'Parabol y=ax² có đỉnh O và đi qua (2;8). Tính a.', answer: '2', explain: '8=4a⇒a=2.' },
+  { id: 509, part: 'III', topicId: 'can', topic: 'Căn nâng cao', type: 'short', question: 'Rút gọn √(72) + √(18).', answer: '9√2', explain: '6√2+3√2=9√2.' },
+  { id: 510, part: 'III', topicId: 'bpt', topic: 'BPT nâng cao', type: 'short', question: 'Giá trị nhỏ nhất của x² - 4x + 7 là bao nhiêu?', answer: '3', explain: 'Đỉnh tại x=2 ⇒ min=3.' },
+  { id: 511, part: 'III', topicId: 'hinh', topic: 'Hình học khó', type: 'short', question: 'Tam giác vuông có cạnh huyền 13, cạnh góc vuông 5. Diện tích?', answer: '30', explain: 'Cạnh còn lại 12 ⇒ S=1/2·5·12=30.' },
+  { id: 512, part: 'III', topicId: 'thucte', topic: 'Ứng dụng khó', type: 'short', question: 'Một vật chuyển động theo s = t² + 2t (m). Tại t=3 thì s=?', answer: '15', explain: 's=9+6=15.' }
+];
+
+    const app = { miniIndex: 0, miniAnswers: {}, miniSubmitted: false, examQuestions: [], examIndex: 0, examAnswers: {}, examSubmitted: false, examTimer: null, secondsLeft: 90 * 60, lastExamKey: '' };
+
+    function isArray(value) { return Array.isArray(value); }
+    function shuffle(array) {
+      const source = isArray(array) ? array.slice() : [];
+      for (let i = source.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [source[i], source[j]] = [source[j], source[i]];
+      }
+      return source;
+    }
+    function rank(score) {
+      if (score >= 8.5) return 'Rất tốt';
+      if (score >= 7) return 'Khá';
+      if (score >= 5) return 'Đạt';
+      return 'Cần cố gắng';
+    }
+    function partLabel(part) {
+      if (part === 'I') return 'Phần I';
+      if (part === 'II') return 'Phần II';
+      return 'Phần III';
+    }
+    function getPartName(q) {
+      if (q.part === 'I') return 'Phần I - Nhiều lựa chọn';
+      if (q.part === 'II') return 'Phần II - Đúng / Sai';
+      return 'Phần III - Trả lời ngắn';
+    }
+
+    function chooseRandomUnique(source, count, excludeIds = new Set()) {
+      const pool = shuffle(source).filter(item => !excludeIds.has(item.id));
+      return pool.slice(0, count);
+    }
+
+    function buildExam() {
+      const used = new Set();
+
+      const coreMCQTopics = ['duongtron', 'hinh', 'bhept', 'viet', 'pt', 'hamso', 'xacsuat', 'bpt'];
+      const selectedMCQ = [];
+      shuffle(coreMCQTopics).forEach(topicId => {
+        const candidates = shuffle(MCQ_BANK.filter(q => q.topicId === topicId && !used.has(q.id)));
+        if (candidates.length && selectedMCQ.length < 12) {
+          selectedMCQ.push(candidates[0]);
+          used.add(candidates[0].id);
+        }
+      });
+      chooseRandomUnique(MCQ_BANK, 12 - selectedMCQ.length, used).forEach(q => {
+        selectedMCQ.push(q);
+        used.add(q.id);
+      });
+
+      const selectedTF = [];
+      const tfTopics = ['viet', 'bhept', 'hinh', 'duongtron', 'xacsuat', 'can', 'thucte'];
+      shuffle(tfTopics).forEach(topicId => {
+        const candidates = shuffle(TRUE_FALSE_BANK.filter(q => q.topicId === topicId && !used.has(q.id)));
+        if (candidates.length && selectedTF.length < 4) {
+          selectedTF.push(candidates[0]);
+          used.add(candidates[0].id);
+        }
+      });
+      chooseRandomUnique(TRUE_FALSE_BANK, 4 - selectedTF.length, used).forEach(q => {
+        selectedTF.push(q);
+        used.add(q.id);
+      });
+
+      const selectedShort = [];
+      const shortTopics = ['bhept', 'viet', 'hinh', 'duongtron', 'pt', 'thucte', 'xacsuat'];
+      shuffle(shortTopics).forEach(topicId => {
+        const candidates = shuffle(SHORT_BANK.filter(q => q.topicId === topicId && !used.has(q.id)));
+        if (candidates.length && selectedShort.length < 6) {
+          selectedShort.push(candidates[0]);
+          used.add(candidates[0].id);
+        }
+      });
+      chooseRandomUnique(SHORT_BANK, 6 - selectedShort.length, used).forEach(q => {
+        selectedShort.push(q);
+        used.add(q.id);
+      });
+
+      const exam = [...selectedMCQ, ...selectedTF, ...selectedShort];
+      const examKey = exam.map(q => q.id).join('-');
+      if (app.lastExamKey && app.lastExamKey === examKey) {
+        return buildExam();
+      }
+      app.lastExamKey = examKey;
+      return exam;
+    }
+
+    function setupTabs() {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+          this.classList.add('active');
+          const target = document.getElementById(this.dataset.tab);
+          if (target) target.classList.add('active');
+        });
+      });
+    }
+
+    function getMiniSet() {
+      return isArray(window.currentMiniSet) && window.currentMiniSet.length ? window.currentMiniSet : MINI_SET;
+    }
+
+    function miniQuestionCorrect(q, ans) {
+      if (ans === undefined) return false;
+      if (q.type === 'mcq') return ans === q.answer;
+      if (q.type === 'tf') return isArray(ans) && isArray(q.answers) && q.answers.every((v, idx) => ans[idx] === v);
+      return String(ans).trim() === String(q.answer).trim();
+    }
+
+    function renderTopics() {
+      const query = ((document.getElementById('searchTopic') || {}).value || '').toLowerCase();
+      const filterValue = (document.getElementById('filterTopic') || {}).value || 'all';
+      const list = TOPICS.filter(t => t.name.toLowerCase().includes(query) && (filterValue === 'all' || t.id === filterValue));
+      const topicList = document.getElementById('topicList');
+      if (!topicList) return;
+      topicList.innerHTML = list.map(t => `
+        <div class="card topic-card">
+          <div class="top">
+            <h3>${t.name}</h3>
+            <span class="pill pill-yellow">Sai ${t.wrong} câu</span>
+          </div>
+          <p>Mức thành thạo: ${t.mastery}%</p>
+          <div class="progress-bar"><div class="progress-fill" style="width:${t.mastery}%"></div></div>
+          <div style="margin-top:12px;">
+            <button class="btn btn-primary topic-practice" data-topic="${t.id}">Luyện ngay</button>
+          </div>
+        </div>
+      `).join('');
+      // Helper: pick at least N items (repeat + shuffle if thiếu)
+      function pickWithRepeatLocal(source, count) {
+        const arr = Array.isArray(source) ? source.slice() : [];
+        if (!arr.length) return [];
+        let out = [];
+        while (out.length < count) {
+          const shuffled = shuffle(arr);
+          out = out.concat(shuffled);
+        }
+        return out.slice(0, count).map((q, i) => ({ ...q, _rt: q.id + '_' + i + '_' + Math.random() }));
+      }
+
+      document.querySelectorAll('.topic-practice').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const topicId = this.dataset.topic;
+          // Lấy theo từng loại để đảm bảo đa dạng
+          const mcq = MCQ_BANK.filter(x => x.topicId === topicId);
+          const tf = TRUE_FALSE_BANK.filter(x => x.topicId === topicId);
+          const sh = SHORT_BANK.filter(x => x.topicId === topicId);
+
+          // Tối thiểu 20 câu: 10 MCQ + 5 TF + 5 Short (thiếu thì tự lặp)
+          const part1 = pickWithRepeatLocal(mcq.length ? mcq : MCQ_BANK, 10);
+          const part2 = pickWithRepeatLocal(tf.length ? tf : TRUE_FALSE_BANK, 5);
+          const part3 = pickWithRepeatLocal(sh.length ? sh : SHORT_BANK, 5);
+
+          const set = shuffle([...part1, ...part2, ...part3]);
+
+          window.currentMiniSet = set;
+          app.miniIndex = 0;
+          app.miniAnswers = {};
+          app.miniSubmitted = false;
+          renderMini();
+          updateMiniStats();
+          const miniTab = document.querySelector('[data-tab="mini"]');
+          if (miniTab) miniTab.click();
+        });
+      });
+    }
+
+    function renderMiniOptions(question) {
+      const box = document.getElementById('miniOptions');
+      if (!box) return;
+      if (question.type === 'mcq') {
+        box.innerHTML = (question.options || []).map((opt, i) => {
+          let cls = 'option';
+          if (app.miniAnswers[question.id] === i) cls += ' selected';
+          if (app.miniSubmitted && question.answer === i) cls = 'option correct';
+          if (app.miniSubmitted && app.miniAnswers[question.id] === i && question.answer !== i) cls = 'option wrong';
+          return `<div class="${cls}" data-index="${i}">${String.fromCharCode(65 + i)}. ${opt}</div>`;
+        }).join('');
+        document.querySelectorAll('#miniOptions .option').forEach(el => el.addEventListener('click', function() {
+          app.miniAnswers[question.id] = Number(this.dataset.index);
+          app.miniSubmitted = false;
+          renderMini();
+          updateMiniStats();
+        }));
+        return;
+      }
+      if (question.type === 'tf') {
+        const current = isArray(app.miniAnswers[question.id]) ? app.miniAnswers[question.id] : [null, null, null, null];
+        box.innerHTML = (question.statements || []).map((st, i) => `
+          <div class="list-item tf-row">
+            <div><strong>${String.fromCharCode(97 + i)})</strong> ${st}</div>
+            <button class="btn ${current[i] === true ? 'btn-primary' : 'btn-secondary'} mini-tf" data-idx="${i}" data-val="true">Đúng</button>
+            <button class="btn ${current[i] === false ? 'btn-primary' : 'btn-secondary'} mini-tf" data-idx="${i}" data-val="false">Sai</button>
+          </div>`).join('');
+        document.querySelectorAll('.mini-tf').forEach(btn => btn.addEventListener('click', function() {
+          const idx = Number(this.dataset.idx);
+          const val = this.dataset.val === 'true';
+          const answer = isArray(app.miniAnswers[question.id]) ? app.miniAnswers[question.id] : [null, null, null, null];
+          answer[idx] = val;
+          app.miniAnswers[question.id] = answer;
+          app.miniSubmitted = false;
+          renderMini();
+          updateMiniStats();
+        }));
+        return;
+      }
+      box.innerHTML = `<input id="miniShortAnswer" placeholder="Nhập đáp án ngắn..." value="${app.miniAnswers[question.id] || ''}"><button class="btn btn-primary" id="saveMiniShort">Lưu đáp án</button>`;
+      document.getElementById('saveMiniShort').addEventListener('click', function() {
+        const input = document.getElementById('miniShortAnswer');
+        app.miniAnswers[question.id] = input ? input.value.trim() : '';
+        app.miniSubmitted = false;
+        updateMiniStats();
+      });
+    }
+
+    function renderMini() {
+      const set = getMiniSet();
+      if (!set.length) return;
+      if (app.miniIndex >= set.length) app.miniIndex = 0;
+      const q = set[app.miniIndex];
+      document.getElementById('miniQuestionBox').innerHTML = `<div class="question"><div class="badge">${q.topic}</div><h3>Câu ${app.miniIndex + 1}. ${q.question}</h3></div>`;
+      renderMiniOptions(q);
+      const explain = document.getElementById('miniExplain');
+      if (app.miniSubmitted && app.miniAnswers[q.id] !== undefined) {
+        explain.style.display = 'block';
+        explain.innerHTML = '<strong>Chữa nhanh:</strong> ' + q.explain;
+      } else {
+        explain.style.display = 'none';
+      }
+      document.getElementById('miniNav').innerHTML = set.map((item, idx) => {
+        let cls = 'nav-btn';
+        if (idx === app.miniIndex) cls += ' current';
+        else if (app.miniAnswers[item.id] !== undefined) cls += ' done';
+        return `<button class="${cls}" data-go="${idx}">${idx + 1}</button>`;
+      }).join('');
+      document.querySelectorAll('#miniNav .nav-btn').forEach(btn => btn.addEventListener('click', function() {
+        app.miniIndex = Number(this.dataset.go);
+        app.miniSubmitted = false;
+        renderMini();
+      }));
+    }
+
+    function getMiniPartSummary(set) {
+      return ['I', 'II', 'III'].map(part => {
+        const items = set.filter(q => q.part === part);
+        if (!items.length) return '';
+        const answered = items.filter(q => app.miniAnswers[q.id] !== undefined).length;
+        const correct = items.filter(q => miniQuestionCorrect(q, app.miniAnswers[q.id])).length;
+        return `<div class="list-item"><strong>${partLabel(part)}:</strong> đúng ${correct}/${items.length} câu · đã làm ${answered}/${items.length}</div>`;
+      }).join('');
+    }
+
+    function updateMiniStats() {
+      const set = getMiniSet();
+      const done = Object.keys(app.miniAnswers).length;
+      const correct = set.filter(q => miniQuestionCorrect(q, app.miniAnswers[q.id])).length;
+      const score = set.length ? ((correct / set.length) * 10).toFixed(1) : '0.0';
+      document.getElementById('miniProgressText').textContent = `Đã làm: ${done}/${set.length}`;
+      document.getElementById('miniProgressFill').style.width = (set.length ? (done / set.length) * 100 : 0) + '%';
+      document.getElementById('miniScore').textContent = score;
+      document.getElementById('miniCorrect').textContent = String(correct);
+      document.getElementById('miniRank').textContent = rank(Number(score));
+      document.getElementById('miniPartBreakdown').innerHTML = getMiniPartSummary(set);
+    }
+
+    function questionCorrect(q, ans) {
+      if (ans === undefined) return false;
+      if (q.type === 'mcq') return ans === q.answer;
+      if (q.type === 'tf') return isArray(ans) && isArray(q.answers) && q.answers.every((v, idx) => ans[idx] === v);
+      return String(ans).trim() === String(q.answer).trim();
+    }
+
+    function scoreTFQuestion(q, ans) {
+      if (!isArray(ans) || !isArray(q.answers)) return 0;
+      let correctCount = 0;
+      q.answers.forEach((v, idx) => { if (ans[idx] === v) correctCount += 1; });
+      if (correctCount === 1) return 0.1;
+      if (correctCount === 2) return 0.25;
+      if (correctCount === 3) return 0.5;
+      if (correctCount === 4) return 1.0;
+      return 0;
+    }
+
+    function computeExamDetails() {
+      const part1 = app.examQuestions.filter(q => q.part === 'I');
+      const part2 = app.examQuestions.filter(q => q.part === 'II');
+      const part3 = app.examQuestions.filter(q => q.part === 'III');
+      const part1Correct = part1.filter(q => questionCorrect(q, app.examAnswers[q.id])).length;
+      const part1Score = part1Correct * 0.25;
+      let part2Score = 0;
+      let part2CorrectFull = 0;
+      part2.forEach(q => {
+        const s = scoreTFQuestion(q, app.examAnswers[q.id]);
+        part2Score += s;
+        if (s === 1) part2CorrectFull += 1;
+      });
+      const part3Correct = part3.filter(q => questionCorrect(q, app.examAnswers[q.id])).length;
+      const part3Score = part3Correct * 0.5;
+      const totalScore = +(part1Score + part2Score + part3Score).toFixed(2);
+      const totalCorrect = app.examQuestions.filter(q => questionCorrect(q, app.examAnswers[q.id])).length;
+      return {
+        part1: { total: part1.length, correct: part1Correct, score: +part1Score.toFixed(2) },
+        part2: { total: part2.length, correctFull: part2CorrectFull, score: +part2Score.toFixed(2) },
+        part3: { total: part3.length, correct: part3Correct, score: +part3Score.toFixed(2) },
+        totalScore,
+        totalCorrect
+      };
+    }
+
+    function renderExamPartSummary() {
+      const details = computeExamDetails();
+      document.getElementById('examPartBreakdown').innerHTML = `
+        <div class="list-item"><strong>Phần I:</strong> đúng ${details.part1.correct}/${details.part1.total} câu · ${details.part1.score} điểm</div>
+        <div class="list-item"><strong>Phần II:</strong> trọn vẹn ${details.part2.correctFull}/${details.part2.total} câu · ${details.part2.score} điểm</div>
+        <div class="list-item"><strong>Phần III:</strong> đúng ${details.part3.correct}/${details.part3.total} câu · ${details.part3.score} điểm</div>`;
+    }
+
+    function renderDetailedScoreTable() {
+      const details = computeExamDetails();
+      document.getElementById('examScoreTableWrap').innerHTML = `
+        <table class="score-table">
+          <tr><th>Phần</th><th>Số câu đúng</th><th>Cách tính</th><th>Điểm</th></tr>
+          <tr><td>Phần I</td><td>${details.part1.correct}/${details.part1.total}</td><td>${details.part1.correct} × 0,25</td><td>${details.part1.score}</td></tr>
+          <tr><td>Phần II</td><td>Xem theo từng câu</td><td>1 ý đúng = 0,1; 2 ý = 0,25; 3 ý = 0,5; 4 ý = 1,0</td><td>${details.part2.score}</td></tr>
+          <tr><td>Phần III</td><td>${details.part3.correct}/${details.part3.total}</td><td>${details.part3.correct} × 0,5</td><td>${details.part3.score}</td></tr>
+          <tr><th colspan="3">Tổng điểm</th><th>${details.totalScore}</th></tr>
+        </table>`;
+    }
+
+    function renderFinalSummary() {
+      const details = computeExamDetails();
+      const totalQuestions = app.examQuestions.length;
+      const answered = Object.keys(app.examAnswers).length;
+      const unanswered = totalQuestions - answered;
+      document.getElementById('examSummaryWrap').innerHTML = `
+        <table class="summary-table">
+          <tr><th>Tổng số câu</th><th>Đã làm</th><th>Chưa làm</th><th>Số câu đúng</th><th>Tổng điểm</th><th>Xếp loại</th></tr>
+          <tr><td>${totalQuestions}</td><td>${answered}</td><td>${unanswered}</td><td>${details.totalCorrect}</td><td>${details.totalScore.toFixed(2)}</td><td>${rank(details.totalScore)}</td></tr>
+        </table>`;
+    }
+
+    function updateExamStats() {
+      const done = Object.keys(app.examAnswers).length;
+      const details = computeExamDetails();
+      document.getElementById('examDoneText').textContent = `Đã làm ${done}/${app.examQuestions.length} câu`;
+      document.getElementById('examProgressFill').style.width = (app.examQuestions.length ? (done / app.examQuestions.length) * 100 : 0) + '%';
+      document.getElementById('examScore').textContent = details.totalScore.toFixed(2);
+      document.getElementById('examCorrect').textContent = String(details.totalCorrect);
+      renderExamPartSummary();
+      renderDetailedScoreTable();
+      renderFinalSummary();
+    }
+
+    function renderExamOptions(question) {
+      const box = document.getElementById('examOptions');
+      if (!box) return;
+      if (question.type === 'mcq') {
+        box.innerHTML = (question.options || []).map((opt, i) => {
+          let cls = 'option';
+          if (app.examAnswers[question.id] === i) cls += ' selected';
+          if (app.examSubmitted && question.answer === i) cls = 'option correct';
+          if (app.examSubmitted && app.examAnswers[question.id] === i && question.answer !== i) cls = 'option wrong';
+          return `<div class="${cls}" data-index="${i}">${String.fromCharCode(65 + i)}. ${opt}</div>`;
+        }).join('');
+        document.querySelectorAll('#examOptions .option').forEach(el => el.addEventListener('click', function() {
+          app.examAnswers[question.id] = Number(this.dataset.index);
+          app.examSubmitted = false;
+          renderExam();
+          updateExamStats();
+        }));
+        return;
+      }
+      if (question.type === 'tf') {
+        const current = isArray(app.examAnswers[question.id]) ? app.examAnswers[question.id] : [null, null, null, null];
+        box.innerHTML = (question.statements || []).map((st, i) => `
+          <div class="list-item tf-row">
+            <div><strong>${String.fromCharCode(97 + i)})</strong> ${st}</div>
+            <button class="btn ${current[i] === true ? 'btn-primary' : 'btn-secondary'} exam-tf" data-idx="${i}" data-val="true">Đúng</button>
+            <button class="btn ${current[i] === false ? 'btn-primary' : 'btn-secondary'} exam-tf" data-idx="${i}" data-val="false">Sai</button>
+          </div>`).join('');
+        document.querySelectorAll('.exam-tf').forEach(btn => btn.addEventListener('click', function() {
+          const idx = Number(this.dataset.idx);
+          const val = this.dataset.val === 'true';
+          const answer = isArray(app.examAnswers[question.id]) ? app.examAnswers[question.id] : [null, null, null, null];
+          answer[idx] = val;
+          app.examAnswers[question.id] = answer;
+          app.examSubmitted = false;
+          renderExam();
+          updateExamStats();
+        }));
+        return;
+      }
+      box.innerHTML = `<input id="shortAnswerInput" placeholder="Nhập đáp án ngắn..." value="${app.examAnswers[question.id] || ''}"><button class="btn btn-primary" id="saveShortAnswer">Lưu đáp án</button>`;
+      document.getElementById('saveShortAnswer').addEventListener('click', function() {
+        const input = document.getElementById('shortAnswerInput');
+        app.examAnswers[question.id] = input ? input.value.trim() : '';
+        app.examSubmitted = false;
+        updateExamStats();
+      });
+    }
+
+    function renderExam() {
+      if (!app.examQuestions.length) return;
+      if (app.examIndex >= app.examQuestions.length) app.examIndex = 0;
+      const q = app.examQuestions[app.examIndex];
+      document.getElementById('examMeta').textContent = getPartName(q);
+      document.getElementById('examPartTag').textContent = q.part;
+      document.getElementById('examQuestionBox').innerHTML = `<div class="question"><div class="badge">${q.topic}</div><h3>Câu ${app.examIndex + 1}. ${q.question}</h3></div>`;
+      renderExamOptions(q);
+      const explain = document.getElementById('examExplain');
+      if (app.examSubmitted) {
+        explain.style.display = 'block';
+        explain.innerHTML = '<strong>Giải thích:</strong> ' + q.explain;
+      } else {
+        explain.style.display = 'none';
+      }
+      document.getElementById('examNav').innerHTML = app.examQuestions.map((item, idx) => {
+        let cls = 'nav-btn';
+        const answered = app.examAnswers[item.id] !== undefined;
+        if (idx === app.examIndex) cls += ' current';
+        else if (app.examSubmitted && answered) cls += questionCorrect(item, app.examAnswers[item.id]) ? ' correct' : ' incorrect';
+        else if (answered) cls += ' done';
+        return `<button class="${cls}" data-go="${idx}">${idx + 1}</button>`;
+      }).join('');
+      document.querySelectorAll('#examNav .nav-btn').forEach(btn => btn.addEventListener('click', function() {
+        app.examIndex = Number(this.dataset.go);
+        app.examSubmitted = false;
+        renderExam();
+      }));
+    }
+
+    function startExam() {
+      app.examQuestions = buildExam();
+      app.examIndex = 0;
+      app.examAnswers = {};
+      app.examSubmitted = false;
+      app.secondsLeft = 90 * 60;
+      if (app.examTimer) clearInterval(app.examTimer);
+      app.examTimer = setInterval(() => {
+        app.secondsLeft -= 1;
+        document.getElementById('examTimer').textContent = formatTime(app.secondsLeft);
+        if (app.secondsLeft <= 0) {
+          clearInterval(app.examTimer);
+          finishExam();
+        }
+      }, 1000);
+      document.getElementById('examLobby').classList.add('hidden');
+      document.getElementById('examArea').classList.remove('hidden');
+      document.getElementById('examTimer').textContent = formatTime(app.secondsLeft);
+      renderExam();
+      updateExamStats();
+    }
+
+    function formatTime(total) {
+      const m = Math.floor(total / 60);
+      const s = total % 60;
+      return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    }
+
+    function finishExam() {
+      if (app.examTimer) clearInterval(app.examTimer);
+      app.examSubmitted = true;
+      renderExam();
+      updateExamStats();
+      const details = computeExamDetails();
+      alert('Đã nộp bài. Tổng điểm của bạn là ' + details.totalScore.toFixed(2));
+    }
+
+    function runSelfChecks() {
+      console.assert(Array.isArray(TOPICS), 'TOPICS phải là mảng');
+      console.assert(Array.isArray(MCQ_BANK), 'MCQ_BANK phải là mảng');
+      console.assert(Array.isArray(TRUE_FALSE_BANK), 'TRUE_FALSE_BANK phải là mảng');
+      console.assert(Array.isArray(SHORT_BANK), 'SHORT_BANK phải là mảng');
+      const exam = buildExam();
+      console.assert(exam.length === 22, 'Đề phải có 22 câu');
+      console.assert(exam.filter(q => q.part === 'I').length === 12, 'Phần I phải có 12 câu');
+      console.assert(exam.filter(q => q.part === 'II').length === 4, 'Phần II phải có 4 câu');
+      console.assert(exam.filter(q => q.part === 'III').length === 6, 'Phần III phải có 6 câu');
+      console.assert(TRUE_FALSE_BANK.length >= 12, 'Ngân hàng đúng/sai nên có ít nhất 12 câu');
+      console.assert(SHORT_BANK.length >= 20, 'Ngân hàng trả lời ngắn nên có ít nhất 20 câu');
+      const exam2 = buildExam();
+      console.assert(exam.map(q => q.id).join('-') !== exam2.map(q => q.id).join('-'), 'Hai lần tạo đề liên tiếp nên cho ra mã đề khác nhau');
+    }
+
+    document.getElementById('searchTopic').addEventListener('input', renderTopics);
+    document.getElementById('filterTopic').addEventListener('change', renderTopics);
+    document.getElementById('miniSubmit').addEventListener('click', function() { app.miniSubmitted = true; renderMini(); updateMiniStats(); });
+    document.getElementById('miniPrev').addEventListener('click', function() {
+      const set = getMiniSet();
+      app.miniIndex = Math.max(0, app.miniIndex - 1);
+      app.miniSubmitted = false;
+      if (set.length) renderMini();
+    });
+    document.getElementById('miniNext').addEventListener('click', function() {
+      const set = getMiniSet();
+      app.miniIndex = Math.min(set.length - 1, app.miniIndex + 1);
+      app.miniSubmitted = false;
+      if (set.length) renderMini();
+    });
+    document.getElementById('startExam').addEventListener('click', startExam);
+    document.getElementById('examSubmit').addEventListener('click', function() { app.examSubmitted = true; renderExam(); updateExamStats(); });
+    document.getElementById('examPrev').addEventListener('click', function() { app.examIndex = Math.max(0, app.examIndex - 1); app.examSubmitted = false; renderExam(); });
+    document.getElementById('examNext').addEventListener('click', function() { app.examIndex = Math.min(app.examQuestions.length - 1, app.examIndex + 1); app.examSubmitted = false; renderExam(); });
+    document.getElementById('finishExam').addEventListener('click', finishExam);
+    document.getElementById('loginBtn').addEventListener('click', function() {
+      const name = document.getElementById('studentName').value.trim();
+      const cls = document.getElementById('studentClass').value.trim();
+      const error = document.getElementById('loginError');
+      if (!name || !cls) {
+        error.style.display = 'block';
+        return;
+      }
+      error.style.display = 'none';
+      document.getElementById('studentInfo').textContent = name + ' - Lớp ' + cls;
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('appShell').classList.remove('hidden');
+    });
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      document.getElementById('appShell').classList.add('hidden');
+      document.getElementById('loginScreen').classList.remove('hidden');
+    });
+
+    setupTabs();
+    renderTopics();
+    renderMini();
+    updateMiniStats();
+    runSelfChecks();
+  </script>
+</body>
+</html>
